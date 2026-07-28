@@ -1,0 +1,16 @@
+
+targets:
+  $default:
+    sources:
+      - $package$
+      - lib/$lib$
+      - lib/providers/**
+      - lib/api/types/**
+      - lib/dto/**
+    builders:
+      json_serializable:
+        options: {}
+      riverpod_generator:
+        options: {}
+      freezed:
+        options: {}

@@ -3,14 +3,12 @@ import 'package:fairy_forum_admin_app/routes/management/user_list.dart';
 import 'package:fairy_forum_admin_app/routes/root.dart';
 import 'package:fairy_forum_admin_app/routes/home/settings.dart';
 import 'package:fairy_forum_admin_app/routes/settings/theme.dart';
-import 'package:fairy_forum_admin_app/routes/test.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (_, _) => HomePage()),
-    GoRoute(path: '/test', builder: (_, _) => TestPage()),
     GoRoute(
       path: '/settings',
       builder: (_, _) => const SettingsPage(),

@@ -21,7 +21,11 @@ class ManagementUserDetailPage extends HookConsumerWidget {
     final snapshot = useFuture(
       useMemoized(() async {
         final client = ref.read(apiClientProvider);
-        return UserListItem.fromJson((await client.findUser('id', id))[0]!);
+        final users = await client.findUser('id', id);
+        if (users.isEmpty) {
+          throw Exception('未找到用户: $id');
+        }
+        return UserListItem.fromJson(users.first as Map<String, dynamic>);
       }, [reloadKey.value]),
     );
 

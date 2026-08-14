@@ -60,14 +60,34 @@ const destinationsLogined = [
 
 @Riverpod()
 class HomeNavigationNotifier extends _$HomeNavigationNotifier {
+  PageController? _controller;
+
   @override
   NavigationState build() {
     final isValid = ref.watch(isValidIdentityProvider);
+
+    final newController = PageController();
+    final oldController = _controller;
+    _controller = newController;
+
+    if (oldController != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!identical(_controller, oldController)) {
+          oldController.dispose();
+        }
+      });
+    }
+
+    ref.onDispose(() {
+      _controller?.dispose();
+      _controller = null;
+    });
+
     return NavigationState(
       destinations: isValid ? destinationsLogined : destinationsUnlogined,
       currentIndex: 0,
       isAnimating: false,
-      controller: PageController(),
+      controller: newController,
     );
   }
 
@@ -93,9 +113,5 @@ class HomeNavigationNotifier extends _$HomeNavigationNotifier {
     if (!state.isAnimating) {
       state = state.copyWith(currentIndex: index);
     }
-  }
-
-  void dispose() {
-    state.controller.dispose();
   }
 }

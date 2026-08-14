@@ -38,7 +38,7 @@ class ManagementUserListPage extends HookConsumerWidget {
                     itemBuilder: (ctx, i) {
                       final user = userListSnapshot.data![i];
 
-                      final avatarHeroTag = UniqueKey();
+                      final avatarHeroTag = 'user ${user.id}';
 
                       return InkWell(
                         onTap: () {

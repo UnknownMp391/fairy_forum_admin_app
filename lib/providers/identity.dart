@@ -21,7 +21,7 @@ class IdentityStorageNotifier extends _$IdentityStorageNotifier {
 
     final valid = id != null && token != null;
 
-    return valid ? IdentityData(adminId: id, adminToken: tokenKey) : null;
+    return valid ? IdentityData(adminId: id, adminToken: token) : null;
   }
 
   Future<void> setIdentity(IdentityData data) async {

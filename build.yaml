@@ -7,6 +7,7 @@ targets:
       - lib/providers/**
       - lib/api/types/**
       - lib/dto/**
+      - pubspec.yaml
     builders:
       json_serializable:
         options: {}
@@ -14,3 +15,13 @@ targets:
         options: {}
       freezed:
         options: {}
+      fairy_forum_admin_app:version_builder:
+        enabled: true
+
+builders:
+  version_builder:
+    import: "package:fairy_forum_admin_app/builders/version_builder.dart"
+    builder_factories: ["versionBuilder"]
+    build_extensions: {"$lib$": ["version.g.dart"]}
+    auto_apply: dependents
+    build_to: source

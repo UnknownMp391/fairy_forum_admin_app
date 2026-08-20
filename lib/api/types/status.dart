@@ -11,6 +11,8 @@ abstract class ForumStatus with _$ForumStatus {
     @JsonKey(name: 'pending_reports') required int pendingReportCount,
     @JsonKey(name: 'posts') required int postCount,
     @JsonKey(name: 'users') required int userCount,
+    @JsonKey(name: 'deleted_posts') required int deletedPostCount,
+    @JsonKey(name: 'deleted_comments') required int deletedCommentCount,
   }) = _ForumStatus;
 
   factory ForumStatus.fromJson(Map<String, dynamic> json) =>

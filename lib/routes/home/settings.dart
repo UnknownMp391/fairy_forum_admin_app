@@ -27,6 +27,27 @@ class SettingsPage extends ConsumerWidget {
             if (isValidIdentity) ...[
               const Divider(height: 16),
               InkWell(
+                onTap: () {
+                  context.push('/settings/local-admins');
+                },
+                child: ListTile(
+                  leading: const Icon(Icons.badge_outlined),
+                  title: const Text('本地管理员'),
+                  subtitle: const Text('本地系统登录账号'),
+                ),
+              ),
+              const Divider(height: 16),
+              InkWell(
+                onTap: () {
+                  context.push('/settings/byok');
+                },
+                child: ListTile(
+                  leading: const Icon(Icons.key),
+                  title: const Text('BYOK 设置'),
+                  subtitle: const Text('配置当前账号的上游凭据'),
+                ),
+              ),
+              InkWell(
                 onTap: () async {
                   await ref
                       .read(identityStorageProvider.notifier)

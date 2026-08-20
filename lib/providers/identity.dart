@@ -11,6 +11,8 @@ part 'identity.g.dart';
 class IdentityStorageNotifier extends _$IdentityStorageNotifier {
   final idKey = SharedPreferencesKeys.adminId;
   final tokenKey = SharedPreferencesKeys.adminToken;
+  final keyKey = SharedPreferencesKeys.adminKey;
+  final roleKey = SharedPreferencesKeys.adminRole;
 
   @override
   FutureOr<IdentityData?> build() async {
@@ -18,10 +20,14 @@ class IdentityStorageNotifier extends _$IdentityStorageNotifier {
 
     final id = prefs.getString(idKey);
     final token = prefs.getString(tokenKey);
+    final key = prefs.getString(keyKey);
+    final role = prefs.getString(roleKey);
 
     final valid = id != null && token != null;
 
-    return valid ? IdentityData(adminId: id, adminToken: token) : null;
+    return valid
+        ? IdentityData(adminId: id, adminToken: token, adminKey: key, role: role)
+        : null;
   }
 
   Future<void> setIdentity(IdentityData data) async {
@@ -31,6 +37,14 @@ class IdentityStorageNotifier extends _$IdentityStorageNotifier {
 
     prefs.setString(idKey, data.adminId);
     prefs.setString(tokenKey, data.adminToken);
+    if (data.adminKey != null) {
+      prefs.setString(keyKey, data.adminKey!);
+    }
+    if (data.role != null) {
+      prefs.setString(roleKey, data.role!);
+    } else {
+      prefs.remove(roleKey);
+    }
 
     state = AsyncValue.data(data);
   }
@@ -42,6 +56,8 @@ class IdentityStorageNotifier extends _$IdentityStorageNotifier {
 
     prefs.remove(idKey);
     prefs.remove(tokenKey);
+    prefs.remove(keyKey);
+    prefs.remove(roleKey);
 
     state = AsyncValue.data(null);
   }

@@ -1,4 +1,7 @@
+import 'package:fairy_forum_admin_app/api/client.dart' as api;
+import 'package:fairy_forum_admin_app/components/error_ui.dart';
 import 'package:fairy_forum_admin_app/dto/auth/identity.dart';
+import 'package:fairy_forum_admin_app/providers/api_client.dart';
 import 'package:fairy_forum_admin_app/providers/identity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,9 +14,38 @@ class LoginPage extends HookConsumerWidget {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     final adminIdInputController = useTextEditingController();
-    final adminTokenInputController = useTextEditingController();
+    final passwordInputController = useTextEditingController();
 
     final isLogining = useState(false);
+
+    Future<void> submit() async {
+      if (isLogining.value) return;
+      final adminId = adminIdInputController.text.trim();
+      final password = passwordInputController.text;
+      if (adminId.isEmpty || password.isEmpty) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(content: Text('请输入 Admin ID 和密码')),
+        );
+        return;
+      }
+
+      isLogining.value = true;
+      try {
+        final dio = ref.read(dioProvider);
+        final result = await api.login(dio, adminId, password);
+        await ref.read(identityStorageProvider.notifier).setIdentity(
+              IdentityData(
+                adminId: adminId,
+                adminToken: result.token,
+                role: result.role,
+              ),
+            );
+      } on Exception catch (e) {
+        showErrorSnackBar(scaffoldMessenger, e, prefix: '登录失败: ');
+      } finally {
+        isLogining.value = false;
+      }
+    }
 
     return Center(
       child: Padding(
@@ -25,7 +57,7 @@ class LoginPage extends HookConsumerWidget {
             children: [
               TextField(
                 controller: adminIdInputController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Admin ID',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
@@ -33,41 +65,23 @@ class LoginPage extends HookConsumerWidget {
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: adminTokenInputController,
+                controller: passwordInputController,
                 obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Admin Token',
+                decoration: const InputDecoration(
+                  labelText: '密码',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.password),
                 ),
+                onSubmitted: (_) => submit(),
               ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   FilledButton.icon(
-                    onPressed: () async {
-                      if (isLogining.value) return;
-                      isLogining.value = true;
-                      try {
-                        ref
-                            .read(identityStorageProvider.notifier)
-                            .setIdentity(
-                              IdentityData(
-                                adminId: adminIdInputController.text,
-                                adminToken: adminTokenInputController.text,
-                              ),
-                            );
-                      } on Exception catch (e) {
-                        isLogining.value = false;
-
-                        scaffoldMessenger.showSnackBar(
-                          SnackBar(content: Text('登录失败: $e')),
-                        );
-                      }
-                    },
+                    onPressed: isLogining.value ? null : submit,
                     icon: isLogining.value
-                        ? SizedBox(
+                        ? const SizedBox(
                             width: 16,
                             height: 16,
                             child: CircularProgressIndicator(

@@ -12,7 +12,7 @@ abstract class ManagementUserDetailPageExtra
     String? bio,
     DateTime? createdAt,
     String? email,
-    int? gender,
+    String? gender,
     bool? isBanned,
     Object? heroTag,
   }) = _ManagementUserDetailPageExtra;

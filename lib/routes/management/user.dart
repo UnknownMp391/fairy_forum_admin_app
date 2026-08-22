@@ -113,9 +113,7 @@ class ManagementUserDetailPage extends HookConsumerWidget {
                                   child: avatarUrl == null
                                       ? null
                                       : CachedNetworkImage(
-                                          imageUrl: ApiClient.avatarProxyUrl(
-                                            avatarUrl,
-                                          ),
+                                          imageUrl: avatarProxyUrl(avatarUrl),
                                         ),
                                 ),
                               ),

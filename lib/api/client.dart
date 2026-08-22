@@ -88,18 +88,18 @@ Future<bool> checkIdentityValid(IdentityData data, Dio dio) async {
   }
 }
 
-class ApiClient {
-  static String avatarProxyUrl(String? rawUrl) {
-    if (rawUrl == null || rawUrl.isEmpty) return '';
-    final hasScheme = Uri.tryParse(rawUrl)?.hasScheme ?? false;
-    final resolved = hasScheme
-        ? rawUrl
-        : imgBase.isEmpty
-        ? rawUrl
-        : '${imgBase.replaceAll(RegExp(r'/+$'), '')}/${rawUrl.replaceAll(RegExp(r'^/+'), '')}';
-    return '${ApiEndpoints.apiBaseUrl}/api/avatar-proxy?url=${Uri.encodeQueryComponent(resolved)}';
-  }
+String avatarProxyUrl(String? rawUrl) {
+  if (rawUrl == null || rawUrl.isEmpty) return '';
+  final hasScheme = Uri.tryParse(rawUrl)?.hasScheme ?? false;
+  final resolved = hasScheme
+      ? rawUrl
+      : imgBase.isEmpty
+      ? rawUrl
+      : '${imgBase.replaceAll(RegExp(r'/+$'), '')}/${rawUrl.replaceAll(RegExp(r'^/+'), '')}';
+  return '${ApiEndpoints.apiBaseUrl}/api/avatar-proxy?url=${Uri.encodeQueryComponent(resolved)}';
+}
 
+class ApiClient {
   final Dio _dio;
   final IdentityData? _identityData;
   ApiClient(this._dio, this._identityData);
@@ -913,5 +913,9 @@ class ApiClient {
       body: TrashRestoreRequest(ids: ids, kind: kind).toJson(),
     );
     return _decodeBatch(raw);
+  }
+
+  Future<String> dailySentence() async {
+    return (await _dio.get(ApiEndpoints.dlyStcUrl)).toString();
   }
 }

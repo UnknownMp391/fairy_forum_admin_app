@@ -21,44 +21,60 @@ class OverviewPage extends HookConsumerWidget {
         hasData: snapshot.hasData,
         dataBuilder: (_) => ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 800),
-          child: RefreshIndicator(
-            onRefresh: () async {
-              refreshKey.value = UniqueKey();
-            },
-            child: ListView(
+
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GridView.extent(
-                    shrinkWrap: true,
-                    maxCrossAxisExtent: 240.0,
-                    mainAxisSpacing: 8.0,
-                    crossAxisSpacing: 8.0,
-                    childAspectRatio: 1.5,
-                    children: [
-                      StatusCard(
-                        name: '待处理举报数',
-                        value: snapshot.data!.pendingReportCount,
+                GridView.extent(
+                  shrinkWrap: true,
+                  maxCrossAxisExtent: 240.0,
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 8.0,
+                  childAspectRatio: 1.5,
+                  children: [
+                    StatusCard(
+                      name: '待处理举报数',
+                      value: snapshot.data!.pendingReportCount,
+                    ),
+                    StatusCard(
+                      name: '封禁用户数',
+                      value: snapshot.data!.userBannedCount,
+                    ),
+                    StatusCard(name: '用户数', value: snapshot.data!.userCount),
+                    StatusCard(name: '帖子数', value: snapshot.data!.postCount),
+                    StatusCard(name: '评论数', value: snapshot.data!.commentCount),
+                    StatusCard(
+                      name: '回收站帖子数',
+                      value: snapshot.data!.deletedPostCount,
+                    ),
+                    StatusCard(
+                      name: '回收站评论数',
+                      value: snapshot.data!.deletedCommentCount,
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Align(
+                      alignment: .bottomCenter,
+                      child: FutureBuilder(
+                        future: () async {
+                          final client = ref.read(apiClientProvider);
+
+                          return await client.dailySentence();
+                        }(),
+                        builder: (context, asyncSnapshot) =>
+                            asyncSnapshot.data == null
+                            ? SizedBox()
+                            : Text(
+                                asyncSnapshot.data!,
+                                style: Theme.of(context).textTheme.labelLarge!
+                                    .copyWith(color: Colors.grey),
+                              ),
                       ),
-                      StatusCard(
-                        name: '封禁用户数',
-                        value: snapshot.data!.userBannedCount,
-                      ),
-                      StatusCard(name: '用户数', value: snapshot.data!.userCount),
-                      StatusCard(name: '帖子数', value: snapshot.data!.postCount),
-                      StatusCard(
-                        name: '评论数',
-                        value: snapshot.data!.commentCount,
-                      ),
-                      StatusCard(
-                        name: '回收站帖子数',
-                        value: snapshot.data!.deletedPostCount,
-                      ),
-                      StatusCard(
-                        name: '回收站评论数',
-                        value: snapshot.data!.deletedCommentCount,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],

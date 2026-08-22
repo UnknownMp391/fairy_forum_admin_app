@@ -10,6 +10,11 @@ class ApiEndpoints {
     'API_BASEURL',
     defaultValue: 'http://localhost:8080',
   );
+
+  static const dlyStcUrl = String.fromEnvironment(
+    'API_DLYSTC',
+    defaultValue: 'https://dlystc.unknownmp.top/api/sentence',
+  );
 }
 
 const imgBase = String.fromEnvironment('IMG_BASE', defaultValue: '');

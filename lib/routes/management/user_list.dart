@@ -252,9 +252,7 @@ class ManagementUserListPage extends HookConsumerWidget {
                                   color: Colors.grey,
                                 )
                               : CachedNetworkImage(
-                                  imageUrl: ApiClient.avatarProxyUrl(
-                                    user.avatarUrl,
-                                  ),
+                                  imageUrl: avatarProxyUrl(user.avatarUrl),
                                 ),
                         ),
                       ),

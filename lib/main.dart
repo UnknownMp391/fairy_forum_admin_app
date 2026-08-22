@@ -3,22 +3,28 @@ import 'package:fairy_forum_admin_app/polyfills/dynamic_color.dart';
 import 'package:fairy_forum_admin_app/providers/identity.dart';
 import 'package:fairy_forum_admin_app/providers/theme.dart';
 import 'package:fairy_forum_admin_app/version.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fairy_forum_admin_app/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-Future<void> main() async {
-  await SentryFlutter.init((options) {
-    options.dsn =
-        'https://3a321815c5b6332358e4ac3d74237edc@o4511653575983104.ingest.us.sentry.io/4511921656561664';
-    options.sendDefaultPii = true;
-    options.enableLogs = true;
-    options.release = appRelease;
-    options.tracesSampleRate = 0.25;
-    options.replay.sessionSampleRate = 0.1;
-    options.replay.onErrorSampleRate = 1.0;
-  }, appRunner: () => runApp(SentryWidget(child: ProviderScope(child: MyApp()))));
+void main() {
+  final app = ProviderScope(child: MyApp());
+  if (kReleaseMode) {
+    SentryFlutter.init((options) {
+      options.dsn =
+          'https://3a321815c5b6332358e4ac3d74237edc@o4511653575983104.ingest.us.sentry.io/4511921656561664';
+      options.sendDefaultPii = true;
+      options.enableLogs = true;
+      options.release = appRelease;
+      options.tracesSampleRate = 0.25;
+      options.replay.sessionSampleRate = 0.1;
+      options.replay.onErrorSampleRate = 1.0;
+    }, appRunner: () => runApp(SentryWidget(child: app)));
+  } else {
+    runApp(app);
+  }
 }
 
 class MyApp extends ConsumerWidget {

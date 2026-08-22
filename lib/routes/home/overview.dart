@@ -44,7 +44,7 @@ class OverviewPage extends HookConsumerWidget {
                         name: '封禁用户数',
                         value: snapshot.data!.userBannedCount,
                       ),
-                      StatusCard(name: '用户数量', value: snapshot.data!.userCount),
+                      StatusCard(name: '用户数', value: snapshot.data!.userCount),
                       StatusCard(name: '帖子数', value: snapshot.data!.postCount),
                       StatusCard(
                         name: '评论数',

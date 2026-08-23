@@ -8,7 +8,7 @@ const wideWidth = 600;
 class ApiEndpoints {
   static const apiBaseUrl = String.fromEnvironment(
     'API_BASEURL',
-    defaultValue: 'http://localhost:8080',
+    defaultValue: 'http://localhost:12437',
   );
 
   static const dlyStcUrl = String.fromEnvironment(

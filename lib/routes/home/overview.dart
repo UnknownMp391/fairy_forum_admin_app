@@ -1,3 +1,4 @@
+import 'package:fairy_forum_admin_app/components/copyable.dart';
 import 'package:fairy_forum_admin_app/components/error_ui.dart';
 import 'package:fairy_forum_admin_app/providers/api_client.dart';
 import 'package:flutter/material.dart';
@@ -68,10 +69,15 @@ class OverviewPage extends HookConsumerWidget {
                         builder: (context, asyncSnapshot) =>
                             asyncSnapshot.data == null
                             ? SizedBox()
-                            : Text(
-                                asyncSnapshot.data!,
-                                style: Theme.of(context).textTheme.labelLarge!
-                                    .copyWith(color: Colors.grey),
+                            : CopyableWidget(
+                                copyOnLongPress: true,
+                                withInk: true,
+                                value: asyncSnapshot.data!,
+                                child: Text(
+                                  asyncSnapshot.data!,
+                                  style: Theme.of(context).textTheme.labelSmall!
+                                      .copyWith(color: Colors.grey),
+                                ),
                               ),
                       ),
                     ),
